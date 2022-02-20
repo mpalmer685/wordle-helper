@@ -7,15 +7,7 @@ function App() {
   return (
     <div className="flex h-full flex-col items-center">
       <Header />
-      <GuessList
-        guesses={[
-          {
-            word: 'stare',
-            results: ['correct', 'absent', 'absent', 'absent', 'absent'],
-          },
-          { word: 'slim', results: [] },
-        ]}
-      />
+      <GuessList />
       <HelperInput />
     </div>
   )

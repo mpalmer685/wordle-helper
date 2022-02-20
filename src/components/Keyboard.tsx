@@ -1,19 +1,13 @@
 import * as React from 'react'
 import cx from 'clsx'
+import { useDispatch } from 'store'
+import { addLetter, deleteLetter, submitGuess } from 'store/guesses'
 
 const validKeys = 'abcdefghijklmnopqrstuvwxyz'
 
-type Props = {
-  onAddLetter: (letter: string) => void
-  onDeleteLetter: () => void
-  onSubmitGuess: () => void
-}
+export function Keyboard() {
+  const dispatch = useDispatch()
 
-export function Keyboard({
-  onAddLetter,
-  onDeleteLetter,
-  onSubmitGuess,
-}: Props) {
   React.useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.repeat || event.ctrlKey || event.metaKey) {
@@ -21,11 +15,11 @@ export function Keyboard({
       }
       const key = event.key
       if (validKeys.includes(key)) {
-        onAddLetter(key)
+        dispatch(addLetter(key))
       } else if (key === 'Backspace') {
-        onDeleteLetter()
+        dispatch(deleteLetter())
       } else if (key === 'Enter') {
-        onSubmitGuess()
+        dispatch(submitGuess())
       }
     }
 
@@ -33,13 +27,13 @@ export function Keyboard({
     return () => {
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [onAddLetter, onDeleteLetter, onSubmitGuess])
+  }, [dispatch])
 
   return (
     <div className="mx-2 flex h-full select-none flex-col">
       <Row>
         {'qwertyuiop'.split('').map((key) => (
-          <Button key={key} onClick={() => onAddLetter(key)}>
+          <Button key={key} onClick={() => dispatch(addLetter(key))}>
             {key}
           </Button>
         ))}
@@ -47,22 +41,22 @@ export function Keyboard({
       <Row>
         <div className="-ml-1.5 flex-1/2" />
         {'asdfghjkl'.split('').map((key) => (
-          <Button key={key} onClick={() => onAddLetter(key)}>
+          <Button key={key} onClick={() => dispatch(addLetter(key))}>
             {key}
           </Button>
         ))}
         <div className="!ml-0 flex-1/2" />
       </Row>
       <Row>
-        <Button className="flex-1.5" onClick={onSubmitGuess}>
+        <Button className="flex-1.5" onClick={() => dispatch(submitGuess())}>
           Enter
         </Button>
         {'zxcvbnm'.split('').map((key) => (
-          <Button key={key} onClick={() => onAddLetter(key)}>
+          <Button key={key} onClick={() => dispatch(addLetter(key))}>
             {key}
           </Button>
         ))}
-        <Button className="flex-1.5" onClick={() => onDeleteLetter()}>
+        <Button className="flex-1.5" onClick={() => dispatch(deleteLetter())}>
           Del
         </Button>
       </Row>

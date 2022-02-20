@@ -1,19 +1,24 @@
 import * as React from 'react'
 import cx from 'clsx'
-import type { Guess, GuessResult } from '../types'
-import { range } from '../util'
+import range from 'lodash/range'
+import { useDispatch, useSelector } from 'store'
+import { changeResult } from 'store/guesses'
+import type { GuessResult } from '../types'
 
-type GuessListProps = {
-  guesses: Guess[]
-}
-
-export function GuessList({ guesses }: GuessListProps) {
+export function GuessList() {
+  const dispatch = useDispatch()
   const container = React.useRef<HTMLDivElement>(null)
   const { width, height } = useAspectRatio(container, {
     width: 5,
     height: 6,
     maxWidth: 350,
   })
+
+  const { currentGuess, submittedGuesses } = useSelector(
+    (state) => state.guesses
+  )
+
+  const guesses = [...submittedGuesses, { word: currentGuess, results: [] }]
 
   return (
     <div
@@ -30,6 +35,11 @@ export function GuessList({ guesses }: GuessListProps) {
                   key={letterIndex}
                   letter={word[letterIndex]}
                   result={results[letterIndex]}
+                  onClick={() =>
+                    dispatch(
+                      changeResult({ guess: guessIndex, letter: letterIndex })
+                    )
+                  }
                 />
               ))}
             </div>
@@ -48,11 +58,12 @@ type Size = {
 type LetterProps = {
   letter: string | undefined
   result: GuessResult | undefined
+  onClick: () => void
 }
 
-function Letter({ letter, result }: LetterProps) {
+function Letter({ letter, result, onClick }: LetterProps) {
   return (
-    <div
+    <button
       className={cx(
         'inline-flex w-full select-none items-center justify-center align-middle text-3xl font-bold uppercase',
         result === 'correct' && 'bg-green-500 text-white',
@@ -63,9 +74,11 @@ function Letter({ letter, result }: LetterProps) {
             ? 'border-2'
             : 'border-2 border-gray-400 text-black')
       )}
+      disabled={result === undefined}
+      onClick={onClick}
     >
       {letter}
-    </div>
+    </button>
   )
 }
 
