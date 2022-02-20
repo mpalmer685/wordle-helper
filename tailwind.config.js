@@ -4,7 +4,12 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      flex: {
+        '1/2': '0.5 1 0%',
+        1.5: '1.5 1 0%',
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/aspect-ratio')],
 }
