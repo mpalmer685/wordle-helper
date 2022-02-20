@@ -1,27 +1,70 @@
 import * as React from 'react'
 import cx from 'clsx'
 
-export function Keyboard() {
+const validKeys = 'abcdefghijklmnopqrstuvwxyz'
+
+type Props = {
+  onAddLetter: (letter: string) => void
+  onDeleteLetter: () => void
+  onSubmitGuess: () => void
+}
+
+export function Keyboard({
+  onAddLetter,
+  onDeleteLetter,
+  onSubmitGuess,
+}: Props) {
+  React.useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.repeat || event.ctrlKey || event.metaKey) {
+        return
+      }
+      const key = event.key
+      if (validKeys.includes(key)) {
+        onAddLetter(key)
+      } else if (key === 'Backspace') {
+        onDeleteLetter()
+      } else if (key === 'Enter') {
+        onSubmitGuess()
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [onAddLetter, onDeleteLetter, onSubmitGuess])
+
   return (
     <div className="mx-2 flex h-full select-none flex-col">
       <Row>
         {'qwertyuiop'.split('').map((key) => (
-          <Button key={key}>{key}</Button>
+          <Button key={key} onClick={() => onAddLetter(key)}>
+            {key}
+          </Button>
         ))}
       </Row>
       <Row>
         <div className="-ml-1.5 flex-1/2" />
         {'asdfghjkl'.split('').map((key) => (
-          <Button key={key}>{key}</Button>
+          <Button key={key} onClick={() => onAddLetter(key)}>
+            {key}
+          </Button>
         ))}
         <div className="!ml-0 flex-1/2" />
       </Row>
       <Row>
-        <Button className="flex-1.5">Enter</Button>
+        <Button className="flex-1.5" onClick={onSubmitGuess}>
+          Enter
+        </Button>
         {'zxcvbnm'.split('').map((key) => (
-          <Button key={key}>{key}</Button>
+          <Button key={key} onClick={() => onAddLetter(key)}>
+            {key}
+          </Button>
         ))}
-        <Button className="flex-1.5">Del</Button>
+        <Button className="flex-1.5" onClick={() => onDeleteLetter()}>
+          Del
+        </Button>
       </Row>
     </div>
   )
