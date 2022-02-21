@@ -79,4 +79,4 @@ function submitGuess(): ThunkAction<void, AppState, unknown, AnyAction> {
 }
 
 export default guessesSlice.reducer
-export { addLetter, deleteLetter, submitGuess, changeResult }
+export { addLetter, deleteLetter, submitGuess, changeResult, createGuess }

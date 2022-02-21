@@ -5,10 +5,12 @@ import {
   useSelector as useBaseSelector,
 } from 'react-redux'
 import guesses from './guesses'
+import helpMode from './helpMode'
 
 export const store = configureStore({
   reducer: {
     guesses,
+    helpMode,
   },
 })
 
