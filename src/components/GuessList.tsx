@@ -88,7 +88,7 @@ function useAspectRatio<T extends HTMLElement>(
 ) {
   const [size, setSize] = React.useState({ width: 0, height: 0 })
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const container = containerRef.current
     if (!container) {
       return undefined
